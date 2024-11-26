@@ -23,7 +23,7 @@ const handleWebhook = (req, res) => {
 
   const branch = req.body ? JSON.parse(req.body).ref : null;
 
-  if (branch === "refs/heads/main") {
+  if (branch === "refs/heads/touch") {
     exec(
       "cd /root/red-sand && git pull && npm install && pm2 restart all",
       (error, stdout, stderr) => {
