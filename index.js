@@ -3,13 +3,13 @@
 const express = require("express");
 const path = require("path");
 const { createServer } = require("http");
-// const handleChangesToMain = require("./changes-to-main");
+const handleChangesToMain = require("./changes-to-main");
 const { Server } = require("socket.io");
 
 const app = express();
-// app.use("/changes-to-main-branch", express.raw({ type: "application/json" }));
+app.use("/changes-to-main-branch", express.raw({ type: "application/json" }));
 app.use(express.static(path.join(__dirname, "/public")));
-// app.post("/changes-to-main-branch", handleChangesToMain);
+app.post("/changes-to-main-branch", handleChangesToMain);
 
 const server = createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
