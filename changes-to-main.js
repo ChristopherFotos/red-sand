@@ -25,7 +25,7 @@ const handleWebhook = (req, res) => {
 
   if (branch === "refs/heads/main") {
     exec(
-      "cd /root/websocket-DO-poc && git pull && npm install && pm2 restart all",
+      "cd /root/red-sand && git pull && npm install && pm2 restart all",
       (error, stdout, stderr) => {
         if (error) {
           console.error(`Error: ${error.message}`);
