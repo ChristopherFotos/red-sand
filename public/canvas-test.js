@@ -17,11 +17,8 @@ let gameState = {
   type: "particle",
 };
 
-const startDrawEvents = ["mousedown", "touchstart"];
-const stopDrawEvents = ["mouseup", "touchend"];
-
 // add event listeners to track mouse position, whether the mouse is held down,
-// and the game state
+// and the game state 
 document.addEventListener("mousemove", (e) => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
@@ -33,14 +30,14 @@ document.addEventListener("touchmove", (e) => {
 });
 
 // Add event listeners to changing drawing to 'true' on startDraw events...
-startDrawEvents.forEach((eventType) =>
+["mousedown", "touchstart"].forEach((eventType) =>
   document.addEventListener(eventType, (e) => {
     mouse.drawing = true;
   })
 );
 
 //... and change it to 'false' on stopDraw events
-stopDrawEvents.forEach((eventType) =>
+["mouseup", "touchend"].forEach((eventType) =>
   document.addEventListener(eventType, (e) => {
     mouse.drawing = false;
   })
