@@ -9,10 +9,7 @@ const socket = io();
 const remoteUpdateQueue = {};
 
 socket.on("update", (info) => {
-  console.log("UPDATE FROM SOCKET.IO: ", info);
-  // info = JSON.parse(info);
   remoteUpdateQueue[info.id] = info.particle;
-  // remoteUpdateQueue[info.id] = info.state
 });
 
 function statefulDraw() {

@@ -18,18 +18,30 @@ let gameState = {
 };
 
 // add event listeners to track mouse position, whether the mouse is held down,
-// and the game state
+// and the game state 
 document.addEventListener("mousemove", (e) => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
-document.addEventListener("mousedown", (e) => {
-  mouse.drawing = true;
+document.addEventListener("touchmove", (e) => {
+  mouse.x = e.touches[0].clientX;
+  mouse.y = e.touches[0].clientY;
 });
-document.addEventListener("mouseup", (e) => {
-  mouse.drawing = false;
-});
+
+// Add event listeners to changing drawing to 'true' on startDraw events...
+["mousedown", "touchstart"].forEach((eventType) =>
+  document.addEventListener(eventType, (e) => {
+    mouse.drawing = true;
+  })
+);
+
+//... and change it to 'false' on stopDraw events
+["mouseup", "touchend"].forEach((eventType) =>
+  document.addEventListener(eventType, (e) => {
+    mouse.drawing = false;
+  })
+);
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "1") {
