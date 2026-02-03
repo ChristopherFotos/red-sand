@@ -7,12 +7,34 @@
     <link rel="stylesheet" href="canvas-test.css">
 </head>
 <body>
-    
-    <canvas id='canvas'></canvas>
-    <h4>Click and drag to draw particles</h4>
-    <h4>Press 1 for particle dropper</h4>
-    <h4>Press 2 for eraser</h4>
-    <h4>Press 3 to draw a wall</h4>
+    <div class="app">
+        <div class="topbar">
+            <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="brand">Red Sand</div>
+        </div>
+
+        <div id="menu" class="menu" aria-hidden="true">
+            <div class="menu-section">
+                <label for="tool-select">Tool</label>
+                <select id="tool-select">
+                    <option value="particle" selected>Particle</option>
+                    <option value="eraser">Eraser</option>
+                    <option value="fixed">Wall</option>
+                </select>
+            </div>
+            <div class="menu-section hint">
+                Click and drag to draw. Switch tools anytime.
+            </div>
+        </div>
+
+        <div class="stage">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
 
 <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
 <script src="utils.js"></script>

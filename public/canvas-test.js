@@ -1,6 +1,25 @@
 const canvas = document.getElementById("canvas");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+
+const cellSize = 3;
+const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+const fitToCellSize = (value) => Math.floor(value / cellSize) * cellSize;
+
+const setCanvasSize = () => {
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+
+  if (!isMobile()) {
+    const maxWidth = Math.max(320, Math.min(window.innerWidth - 48, 420));
+    const maxHeight = Math.max(540, Math.min(window.innerHeight - 140, 820));
+    width = maxWidth;
+    height = maxHeight;
+  }
+
+  canvas.width = fitToCellSize(width);
+  canvas.height = fitToCellSize(height);
+};
+
+setCanvasSize();
 
 const ctx = canvas.getContext("2d");
 ctx.lineWidth = 1;
@@ -19,14 +38,18 @@ let gameState = {
 
 // add event listeners to track mouse position, whether the mouse is held down,
 // and the game state 
+const updatePointerFromEvent = (clientX, clientY) => {
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = clientX - rect.left;
+  mouse.y = clientY - rect.top;
+};
+
 document.addEventListener("mousemove", (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
+  updatePointerFromEvent(e.clientX, e.clientY);
 });
 
 document.addEventListener("touchmove", (e) => {
-  mouse.x = e.touches[0].clientX;
-  mouse.y = e.touches[0].clientY;
+  updatePointerFromEvent(e.touches[0].clientX, e.touches[0].clientY);
 });
 
 // Add event listeners to changing drawing to 'true' on startDraw events...
@@ -43,17 +66,25 @@ document.addEventListener("touchmove", (e) => {
   })
 );
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "1") {
-    gameState.type = "particle";
-  }
-  if (e.key === "2") {
-    gameState.type = "eraser";
-  }
-  if (e.key === "3") {
-    gameState.type = "fixed";
-  }
-});
+const toolSelect = document.getElementById("tool-select");
+if (toolSelect) {
+  gameState.type = toolSelect.value;
+  toolSelect.addEventListener("change", (e) => {
+    gameState.type = e.target.value;
+  });
+}
+
+const menuToggle = document.getElementById("menu-toggle");
+const menu = document.getElementById("menu");
+if (menuToggle && menu) {
+  menuToggle.addEventListener("click", () => {
+    const willOpen = !menu.classList.contains("open");
+    menu.classList.toggle("open", willOpen);
+    menuToggle.classList.toggle("open", willOpen);
+    menuToggle.setAttribute("aria-expanded", String(willOpen));
+    menu.setAttribute("aria-hidden", String(!willOpen));
+  });
+}
 
 // setting up functions and variables for the board
 let props = {
@@ -64,9 +95,9 @@ let props = {
 
 // instantiating and starting the board
 let board = new Board({
-  width: 600,
-  height: 600,
-  cellSize: 3,
+  width: canvas.width,
+  height: canvas.height,
+  cellSize: cellSize,
   stepFunction: statefulToggle,
   updateInterval: 30,
   cellByCell: true,
@@ -75,3 +106,13 @@ let board = new Board({
 });
 
 board.start();
+
+document.addEventListener(
+  "touchmove",
+  (e) => {
+    if (mouse.drawing) {
+      e.preventDefault();
+    }
+  },
+  { passive: false }
+);
